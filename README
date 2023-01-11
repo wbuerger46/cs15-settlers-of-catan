@@ -1,0 +1,58 @@
+Indy README: Settlers of Catan
+
+HANDIN: On-Time, Final
+
+DESIGN CHOICES:
+    Compared to the past CS15 projects, this game was much more difficult to plan out since there is just so much going
+    on (as expected for Indy)! In the design process, the most time-consuming task was figuring out how to represent
+    the Board of tiles (since it is far different from any other board we've created) and how to represent the
+    Structures (since the pattern of their locations isn't very straightforward). It took me a long time to find the
+    most efficient way to do this, but since I knew they would be contained in 2D Arrays, the resulting diagonal
+    columns and offset rows made the rest of the game logic less complicated.
+    Since Settlers of Catan is a turn-based game (and I wanted the game to automatically shift from phase to phase, not
+    just waiting for the player to trigger the next event), the Board class contains most of the logic that makes it
+    uniquely this game. The Game class contains turn-taking logic, responses to choosing action buttons, graphical
+    organization (lots of Panes!), and a few game functions (dice rolling, development card). I chose to represent
+    the Players in an ArrayDeque so that I could easily keep taking the first player and then adding them right back
+    onto the end.
+    On the other hand, the Board class has the logic for how the board actually operates in terms of this game. I
+    of course needed the 2D Arrays for the board and the structures. I chose not to put the roads into any type of data
+    structure since the function of the roads was always in relation to the structures (which *were* stored in their
+    own data structure). Ultimately, I don't think that was a bad decision since I wouldn't have known how to make
+    the networks of roads into a single data structure. This class also creates the HashMap that shows the relationship
+    between dice roll and tile's resource production. I used a HashMap so that it would be easy to find which tiles
+    should produce resources right when the dice are rolled. Because the pre-game setup rotations aren't full turns
+    and automatically rotate from one to the next, I have all the logic for pre-game setup in the Board class.
+    Otherwise I just had to keep going from Board --> Game --> Board. This cut out that middleman and reduced the
+    amount of redundant code significantly!
+    In this game, there is a lot of relationships between objects. The board needs to know about all the structures
+    and all the roads so it can keep finding places to build new ones. But the structures need to know about the roads
+    so that they can link connect structures. AND the roads need to know about structures so it can calculate the
+    longest road! Therefore, there is a TON of association in this game. When the board is being initialized, we
+    associate all roads with their structures and all structures with their roads. Also we have the Player know about
+    both the structures they own AND the tiles from which they receive resources. And in order to do that, the
+    structures know about which tiles surround it!
+    Last thing: the RealEstate Abstract class! This wasn't a design choice I made until about a week into the coding
+    process. I realized how similar the Structure and Road classes were, so I found the overlaps (which turned out to
+    be nearly everything at the time) and put them into the RealEstate class. In doing so (and doing a bit more
+    consolidation), I reduced 6 EventHandlers into just 1 EventHandler for all the structures and roads! Doing so also
+    helped me in the long run so that I could use type RealEstate in the board class after they are placed on the
+    board. Polymorphism is amazing!
+
+    Since our Bells and Whistles were very loosely defined here is a list of some fun things I added beyond expected:
+    - Welcome Screen (simple yet helpful)
+    - 3- and 4-player functionality
+    - Choosing initial resources during set-up
+    - Awesome graphics (including the number tokens, which are all homemade, thanks to my new photoshop "skills")
+    - Development cards
+    - Using knights / largest army
+    - Hovering when placing RealEstate
+    - Toggling buttons so player knows what they can do
+
+    Thank you so much for taking the time to read this and grade the whole project! One last thing: I know we briefly
+    talked the images. If you compile inside the folder and then run the program outside the folder, they should all
+    show up, but please let me know if I should fix it in any way. Have a great day and a great break!
+
+KNOWN BUGS:
+    Sometimes when using the hovering effect, if you swipe over a settlement quickly, the graphic will not revert back.
+    However, if you go back and move the mouse over it more slowly, it fixes itself.
